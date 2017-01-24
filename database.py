@@ -1,5 +1,11 @@
 import sqlite3
-con = sqlite3.connect('boardgamedeals.db')
+import os
+
+mydir = os.path.abspath(os.path.dirname(__file__))
+db_file = os.path.join(mydir, 'boardgamedeals.db')
+
+
+con = sqlite3.connect(db_file)
 c = con.cursor()
 c.execute("CREATE TABLE IF NOT EXISTS posts(id TEXT);")
 c.execute("CREATE UNIQUE INDEX IF NOT EXISTS postIdIdx ON posts(id);")

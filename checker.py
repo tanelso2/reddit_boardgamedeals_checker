@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.6
 import configparser
 import database
 import messaging
@@ -23,12 +23,12 @@ submissions = reddit.subreddit("boardgamedeals").new(limit=100)
 wishlist_loc = os.path.join(mydir, "wishlist.txt")
 with open(wishlist_loc, 'r') as f:
     data = f.read().split('\n')
-    data.remove("")
-    wishlist = [s.lower() for s in data]
+    wishlist = [s.lower() for s in data if s != ""]
 
 
 def is_game_in_post(post, board_game):
     return board_game in post.title.lower() or board_game in post.selftext.lower()
+
 
 for s in submissions:
     for board_game in wishlist:

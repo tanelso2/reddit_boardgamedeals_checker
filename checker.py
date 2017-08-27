@@ -1,8 +1,10 @@
 #!/usr/bin/env python3.6
 import configparser
 import database
+import gspread
 import messaging
 import praw
+from oauth2client.service_account import ServiceAccountCredentials
 import os
 
 mydir = os.path.abspath(os.path.dirname(__file__))
@@ -20,18 +22,23 @@ reddit = praw.Reddit(client_id=reddit_client_id,
 
 submissions = reddit.subreddit("boardgamedeals").new(limit=100)
 
-wishlist_loc = os.path.join(mydir, "wishlist.txt")
-with open(wishlist_loc, 'r') as f:
-    data = f.read().split('\n')
-    wishlist = [s.lower() for s in data if s != ""]
+def get_list_of_games():
+    scope = ['https://spreadsheets.google.com/feeds']
+    access_key = os.path.join(mydir, "access_key.json")
+    creds = ServiceAccountCredentials.from_json_keyfile_name(access_key, scope)
+    client = gspread.authorize(creds)
+    spreadsheet = client.open("Board Games Wishlist")
+    records = spreadsheet.worksheet("Sheet1").get_all_records()
+    return [ a['Name'].lower() for a in records ]
 
+games = get_list_of_games()
 
 def is_game_in_post(post, board_game):
     return board_game in post.title.lower() or board_game in post.selftext.lower()
 
 
 for s in submissions:
-    for board_game in wishlist:
+    for board_game in games:
         if is_game_in_post(s, board_game) and not database.is_post_in_db(s):
             messaging.send_message(s, board_game)
             database.insert_post(s)

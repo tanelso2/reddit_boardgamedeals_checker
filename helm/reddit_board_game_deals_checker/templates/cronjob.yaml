@@ -1,0 +1,48 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "reddit_board_game_deals_checker.fullname" . }}
+  labels:
+    app: {{ template "reddit_board_game_deals_checker.name" . }}
+    chart: {{ template "reddit_board_game_deals_checker.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+selector:
+    matchLabels:
+      app: {{ template "reddit_board_game_deals_checker.name" . }}
+      release: {{ .Release.Name }}
+spec:
+    schedule: {{ .Values.schedule | quote }}
+    jobTemplate:
+        spec:
+          template:
+            metadata:
+              labels:
+                app: {{ template "reddit_board_game_deals_checker.name" . }}
+                release: {{ .Release.Name }}
+            spec:
+              containers:
+                - name: {{ .Chart.Name }}
+                  image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+                  imagePullPolicy: {{ .Values.image.pullPolicy }}
+                  args:
+                    - "python"
+                    - "checker.py"
+                    - "--config-dir"
+                    - "/conf"
+                    - "--db-file"
+                    - "/db/{{ .Values.persistence.dbFileName }}"
+                  volumeMounts:
+                    - name: credentials
+                      mountPath: /conf
+                      readOnly: true
+                    - name: db
+                      mountPath: /db
+              volumes:
+                - name: credentials
+                  secret:
+                      secretName: {{ .Values.secret.name }}
+                - name: db
+                  persistentVolumeClaim:
+                      claimName: {{ .Values.persistence.existingClaim | default (include "reddit_board_game_deals_checker.fullname" .) }}
+              restartPolicy: OnFailure

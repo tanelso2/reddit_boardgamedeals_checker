@@ -1,3 +1,4 @@
 *.ini
 *.log
 access_key.json
+*.swp

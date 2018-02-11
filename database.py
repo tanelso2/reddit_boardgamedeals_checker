@@ -1,33 +1,26 @@
 import sqlite3
 import os
 
-mydir = os.path.abspath(os.path.dirname(__file__))
-db_file = os.path.join(mydir, 'boardgamedeals.db')
-
-
-con = sqlite3.connect(db_file)
-c = con.cursor()
-c.execute("CREATE TABLE IF NOT EXISTS posts(id TEXT);")
-c.execute("CREATE UNIQUE INDEX IF NOT EXISTS postIdIdx ON posts(id);")
-con.commit()
-
-
-def done():
-    con.close()
-
 INSERT_STMT = "INSERT OR IGNORE INTO posts VALUES (?)"
-def insert_post(post):
-    c.execute(INSERT_STMT, (post.id,))
-    con.commit()
-
-
 SELECT_STMT = "SELECT * FROM posts WHERE id LIKE ?"
-def is_post_in_db(post):
-    c.execute(SELECT_STMT, (post.id,))
-    return c.fetchone() is not None
 
-if __name__ == "__main__":
-    test_id = "def"
-    insert_post(test_id)
-    print(is_post_in_db(test_id))
-    done()
+class GamesDatabase():
+    def __init__(self, db_file):
+        self.con = sqlite3.connect(db_file)
+        self.cursor = self.con.cursor()
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS posts(id TEXT);")
+        self.cursor.execute("CREATE UNIQUE INDEX IF NOT EXISTS postIdIdx ON posts(id);")
+        self.con.commit()
+
+    def __del__(self):
+        self.cursor.close()
+        self.con.close()
+
+    def insert_post(self, post):
+        self.cursor.execute(INSERT_STMT, (post.id,))
+        self.con.commit()
+
+
+    def is_post_in_db(self, post):
+        self.cursor.execute(SELECT_STMT, (post.id,))
+        return self.cursor.fetchone() is not None

@@ -1,4 +1,5 @@
 import configparser
+from datetime import date
 import os
 from twilio.rest import TwilioRestClient
 
@@ -20,9 +21,18 @@ class TwilioMessenger():
 
 
     def send_message(self, reddit_post, board_game):
-        message = f"\n{board_game.upper()}\n{reddit_post.title}\n{reddit_post.shortlink}"
+        message = f"""
+{board_game.upper()}
+{self.format_date(reddit_post)}
+{reddit_post.title}
+{reddit_post.shortlink}"""
         self.client.messages.create(
             to=self.cell_number,
             from_=self.twilio_number,
             body=message
         )
+
+    def format_date(self, reddit_post):
+        created = date.fromtimestamp(reddit_post.created)
+        return created.strftime('%Y/%m/%d')
+

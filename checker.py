@@ -1,4 +1,5 @@
 #!/usr/bin/env python3.6
+from __future__ import print_function
 import configparser
 import database
 import gspread

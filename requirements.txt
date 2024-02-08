@@ -1,10 +1,10 @@
 gspread==0.6.2
 httplib2==0.10.3
+mypy
 oauth2client==4.1.2
-pkg-resources==0.0.0
-praw==4.4.0
-prawcore==0.8.0
-pyasn1==0.3.3
+praw==5.3.0
+prawcore==0.13.0
+pyasn1==0.3.2
 pyasn1-modules==0.0.11
 PySocks==1.6.7
 pytz==2016.10

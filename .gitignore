@@ -2,3 +2,5 @@
 *.log
 access_key.json
 *.swp
+__pycache__/
+venv/

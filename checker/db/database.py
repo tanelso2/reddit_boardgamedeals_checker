@@ -4,7 +4,7 @@ import os
 INSERT_STMT = "INSERT OR IGNORE INTO posts VALUES (?)"
 SELECT_STMT = "SELECT * FROM posts WHERE id LIKE ?"
 
-class GamesDatabase():
+class RedditPostDatabase():
     def __init__(self, db_file):
         self.con = sqlite3.connect(db_file)
         self.cursor = self.con.cursor()
@@ -19,7 +19,6 @@ class GamesDatabase():
     def insert_post(self, post):
         self.cursor.execute(INSERT_STMT, (post.id,))
         self.con.commit()
-
 
     def is_post_in_db(self, post):
         self.cursor.execute(SELECT_STMT, (post.id,))

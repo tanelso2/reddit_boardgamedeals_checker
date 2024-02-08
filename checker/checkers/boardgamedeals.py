@@ -1,4 +1,5 @@
 from checker.checkers.base import RedditChecker
+import logging
 
 def get_list_of_games():
     return ["scythe", "avatar", "revive"]

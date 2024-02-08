@@ -31,13 +31,13 @@ class RedditChecker():
         return True
 
     def after(self, post):
-        logging.info(post)
+        logging.info(f"Found post for check {self.check_name}: {post}")
 
     def check_submissions(self):
-        logging.debug(f"Checking submissions for check {self.check_name}")
+        logging.info(f"Checking submissions for check {self.check_name}")
         posts = self.get_posts()
         posts = list(posts)
-        logging.debug(f"Got {len(posts)} posts")
+        logging.info(f"Got {len(posts)} posts")
         for s in posts:
             if self.pred(s) and not self.db.is_post_in_db(s):
                 logging.debug(f"Adding post id {s.id} to database")

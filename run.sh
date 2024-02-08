@@ -4,8 +4,10 @@
 
 DB=$(pwd)/checker.db
 
-if [ -z "$DB" ]; then
-    touch "$DB"
+if [ ! -f "$DB" ]; then
+    echo "Creating $DB"
+    sqlite3 "$DB" "VACUUM;"
+fi
 
 docker build -t checker:latest . && docker run -it -v "$DB:/checker.db" checker:latest
 

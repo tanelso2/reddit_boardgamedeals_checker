@@ -15,7 +15,7 @@ def get_game_in_post(post, games):
 
 class BoardGameChecker(RedditChecker):
     def __init__(self, db_file, config_dir):
-        super().__init__(db_file, config_dir, "boardgamedeals", "boardgamedeals")
+        super().__init__(db_file, config_dir, "boardgamedeals")
         self.games = get_list_of_games()
 
     def pred(self, post):

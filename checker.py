@@ -15,11 +15,12 @@ parser.add_argument('--db-file', default=os.path.join(mydir, 'checker.db'))
 args = parser.parse_args()
 
 def main():
-    checker = BoardGameChecker(args.db_file, args.config_dir)
-    checker.check_submissions()
-
-    checker2 = StorageDealsChecker(args.db_file, args.config_dir)
-    checker2.check_submissions()
+    checkers = [
+                BoardGameChecker(args.db_file, args.config_dir),
+                StorageDealsChecker(args.db_file, args.config_dir)
+               ]
+    for c in checkers:
+        c.check_submissions()
 
 if __name__ == '__main__':
     main()

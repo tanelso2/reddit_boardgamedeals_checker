@@ -18,11 +18,14 @@ def get_reddit_client(config_dir):
     return reddit
 
 class RedditChecker():
-    def __init__(self, db_file, config_dir, check_name, subreddit):
+    def __init__(self, db_file, config_dir, subreddit=""):
         self.reddit = get_reddit_client(config_dir)
         self.db = database.RedditPostDatabase(db_file=db_file)
         self.subreddit = subreddit
-        self.check_name = check_name
+
+    @property
+    def check_name(self):
+        return self.__class__.__name__
 
     def get_posts(self):
         return self.reddit.subreddit(self.subreddit).new(limit=100)

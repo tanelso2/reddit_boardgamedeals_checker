@@ -36,8 +36,7 @@ class RedditChecker():
     def after(self, post):
         logging.info(f"Found post for check {self.check_name}: {post}")
 
-    def check_submissions(self):
-        logging.info(f"Checking submissions for check {self.check_name}")
+    def gen_valid_submissions(self):
         posts = self.get_posts()
         posts = list(posts)
         logging.info(f"Got {len(posts)} posts")
@@ -45,4 +44,9 @@ class RedditChecker():
             if self.pred(s) and not self.db.is_post_in_db(s):
                 logging.debug(f"Adding post id {s.id} to database")
                 self.db.insert_post(s)
-                self.after(s)
+                yield s
+
+    def check_submissions(self):
+        logging.info(f"Checking submissions for check {self.check_name}")
+        for s in self.gen_valid_submissions():
+            self.after(s)

@@ -9,5 +9,5 @@ if [ ! -f "$DB" ]; then
     sqlite3 "$DB" "VACUUM;"
 fi
 
-docker build -t checker:latest . && docker run -it -v "$DB:/checker.db" checker:latest
+docker build -t checker:latest . && docker run -v "$DB:/checker.db" checker:latest
 

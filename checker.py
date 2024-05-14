@@ -5,6 +5,7 @@ import argparse
 from checker.checkers.boardgamedeals import BoardGameChecker
 from checker.checkers.ram import RAMChecker
 from checker.checkers.storage import StorageDealsChecker
+from checker.checkers.gpu import GPUChecker
 
 
 logging.basicConfig(level=logging.INFO)
@@ -19,7 +20,8 @@ def main():
     checkers = [
                 BoardGameChecker(args.db_file, args.config_dir),
                 RAMChecker(args.db_file, args.config_dir),
-                StorageDealsChecker(args.db_file, args.config_dir)
+                StorageDealsChecker(args.db_file, args.config_dir),
+                GPUChecker(args.db_file, args.config_dir)
                ]
     for c in checkers:
         c.check_submissions()
